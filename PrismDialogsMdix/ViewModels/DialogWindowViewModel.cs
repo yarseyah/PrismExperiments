@@ -65,7 +65,9 @@
                     break;
             }
 
-            RequestClose?.Invoke(new DialogResult(result));
+            IDialogParameters parameters = new DialogParameters();
+            parameters.Add("data", parameter);
+            RequestClose?.Invoke(new DialogResult(result, parameters));
         }
     }
 }

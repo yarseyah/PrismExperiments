@@ -56,7 +56,7 @@
 
         private void OnDialogResult(IDialogResult dialogResult)
         {
-            Trace.WriteLine($"Response from dialog was {dialogResult.Result}");
+            Trace.WriteLine($"Response from dialog was {dialogResult.Result} - {dialogResult.Parameters.GetValue<string>("data")}");
         }
     }
 }
