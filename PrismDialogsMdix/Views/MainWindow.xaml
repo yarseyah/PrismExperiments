@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PrismDialogsMdix"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:viewModels="clr-namespace:PrismDialogsMdix.ViewModels"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -15,12 +16,14 @@
         FontFamily="{materialDesign:MaterialDesignFont}"
         Height="450"
         Width="800"
-        prism:ViewModelLocator.AutoWireViewModel="True">
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=False}">
+
     <Grid>
         <materialDesign:Card Margin="10">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                <ListBox ItemsSource="{Binding Fruits}" />
+                <ListBox ItemsSource="{Binding Fruits}" SelectedIndex="{Binding SelectedFruitIndex}" />
                 <TextBlock Margin="10">Hello World</TextBlock>
                 <Button Style="{StaticResource MaterialDesignOutlinedButton}"
                         Command="{Binding PressMeCommand}"

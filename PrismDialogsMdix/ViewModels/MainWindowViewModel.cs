@@ -12,21 +12,30 @@
     {
         private string[] fruits;
 
+        private int selectedFruitIndex;
+
         public MainWindowViewModel(IFruitService fruitService)
         {
             FruitService = fruitService;
             Fruits = FruitService.GetAll();
+
+            PressMeCommand = new DelegateCommand(() => Trace.WriteLine($"Button pressed - selectedFruitIndex = {SelectedFruitIndex}"));
         }
 
-        public ICommand PressMeCommand { get; } = new DelegateCommand(() => Trace.WriteLine("Button pressed"));
+        public ICommand PressMeCommand { get; }
 
         public string[] Fruits
         {
-            get => this.fruits;
+            get => fruits;
             set => SetProperty(ref this.fruits, value);
         }
 
-        private IFruitService FruitService { get; }
+        public int SelectedFruitIndex
+        {
+            get => selectedFruitIndex;
+            set => SetProperty(ref selectedFruitIndex, value);
+        }
 
+        private IFruitService FruitService { get; }
     }
 }
