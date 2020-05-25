@@ -51,7 +51,7 @@
             IDialogParameters parameters = new DialogParameters();
             parameters.Add("message", message);
 
-            DialogService.ShowDialog("DialogWindow", parameters, OnDialogResult);
+            DialogService.ShowDialog("exampleDialog", parameters, OnDialogResult);
         }
 
         private void OnDialogResult(IDialogResult dialogResult)
