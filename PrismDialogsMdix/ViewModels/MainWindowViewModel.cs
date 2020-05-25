@@ -1,5 +1,6 @@
 ﻿namespace PrismDialogsMdix.ViewModels
 {
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Windows.Input;
 
@@ -11,8 +12,6 @@
 
     public class MainWindowViewModel : BindableBase
     {
-        private string[] fruits;
-
         private int selectedFruitIndex;
 
         public MainWindowViewModel(IFruitService fruitService, IDialogService dialogService)
@@ -20,18 +19,14 @@
             FruitService = fruitService;
             DialogService = dialogService;
 
-            Fruits = FruitService.GetAll();
+            Fruits = new ObservableCollection<string>(FruitService.GetAll());
 
-            PressMeCommand = new DelegateCommand(ShowDialog);
+            PressMeCommand = new DelegateCommand<string>(ShowDialog);
         }
 
         public ICommand PressMeCommand { get; }
 
-        public string[] Fruits
-        {
-            get => fruits;
-            set => SetProperty(ref this.fruits, value);
-        }
+        public ObservableCollection<string> Fruits { get; }
 
         public int SelectedFruitIndex
         {
@@ -43,20 +38,34 @@
 
         private IDialogService DialogService { get; }
 
-        private void ShowDialog()
+        private void ShowDialog(string dialogToShow)
         {
-            var message = $"selectedFruitIndex = {SelectedFruitIndex}";
-            Trace.WriteLine($"Button pressed - selectedFruitIndex = {SelectedFruitIndex}");
+            if (dialogToShow == "exampleDialog")
+            {
+                var message = $"selectedFruitIndex = {SelectedFruitIndex}";
 
-            IDialogParameters parameters = new DialogParameters();
-            parameters.Add("message", message);
-
-            DialogService.ShowDialog("exampleDialog", parameters, OnDialogResult);
-        }
-
-        private void OnDialogResult(IDialogResult dialogResult)
-        {
-            Trace.WriteLine($"Response from dialog was {dialogResult.Result} - {dialogResult.Parameters.GetValue<string>("data")}");
+                Trace.WriteLine($"Button pressed - selectedFruitIndex = {SelectedFruitIndex}");
+                IDialogParameters parameters = new DialogParameters();
+                parameters.Add("message", $"{dialogToShow} - {message}");
+                DialogService.ShowDialog(dialogToShow, parameters, dialogResult => Trace.WriteLine($"Response from dialog was {dialogResult.Result} - {dialogResult.Parameters.GetValue<string>("data")}"));
+            }
+            else
+            {
+                DialogService.ShowDialog(
+                    dialogToShow,
+                    null,
+                    result =>
+                        {
+                            if (result.Result == ButtonResult.OK)
+                            {
+                                var newFruit = result.Parameters.GetValue<string>("newFruit");
+                                if (!string.IsNullOrWhiteSpace(newFruit))
+                                {
+                                    Fruits.Add(newFruit);
+                                }
+                            }
+                        });
+            }
         }
     }
 }

@@ -20,6 +20,7 @@
         {
             containerRegistry.Register<IFruitService, FruitService>();
             containerRegistry.RegisterDialog<Views.DialogWindow>("exampleDialog");
+            containerRegistry.RegisterDialog<Views.DialogTwoWindow>("exampleDialog2");
 
             containerRegistry.RegisterSingleton<ICustomDialogHost, CustomDialogHost>();
             containerRegistry.Register<IDialogService, CustomDialogService>();

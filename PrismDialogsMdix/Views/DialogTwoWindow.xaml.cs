@@ -1,14 +1,13 @@
 ﻿namespace PrismDialogsMdix.Views
 {
-    using System.Diagnostics;
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for DialogWindow.xaml
+    /// Interaction logic for DialogTwoWindow.xaml
     /// </summary>
-    public partial class DialogWindow
+    public partial class DialogTwoWindow : UserControl
     {
-        public DialogWindow()
+        public DialogTwoWindow()
         {
             InitializeComponent();
         }

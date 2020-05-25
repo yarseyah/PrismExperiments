@@ -52,6 +52,7 @@
                 {
                     host.IsOpen = false;
                     callback?.Invoke(r);
+                    host.DialogContent = null;
                 };
         }
     }
