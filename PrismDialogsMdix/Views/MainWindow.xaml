@@ -21,7 +21,7 @@
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel, IsDesignTimeCreatable=False}">
 
     <Grid>
-        <materialDesign:DialogHost IsOpen="False">
+        <materialDesign:DialogHost IsOpen="False" x:Name="DialogHost">
             <materialDesign:DialogHost.DialogContent>
                 <Border x:Name="DialogContent">
                     <StackPanel Margin="16">

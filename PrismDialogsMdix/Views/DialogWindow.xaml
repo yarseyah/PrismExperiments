@@ -15,6 +15,7 @@
           Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition />
+            <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -23,15 +24,23 @@
                    VerticalAlignment="Stretch"
                    Grid.Row="0"
                    TextWrapping="Wrap" />
-        <Button Command="{Binding CloseDialogCommand}"
-                CommandParameter="true"
-                Style="{StaticResource MaterialDesignOutlinedButton}"
-                Content="OK"
-                Width="75"
-                Height="25"
-                HorizontalAlignment="Right"
-                Margin="0,10,0,0"
-                Grid.Row="1"
-                IsDefault="True" />
+        <CheckBox Grid.Row="1"
+                  IsChecked="{Binding PreventClose}">Prevent Close</CheckBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="true"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    Content="OK"
+                    Width="100"
+                    Margin="5"
+                    IsDefault="True" />
+            <Button Command="{Binding CloseDialogCommand}"
+                    CommandParameter="false"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    Content="CANCEL"
+                    Width="100"
+                    Margin="5"
+                    IsCancel="True" />
+        </StackPanel>
     </Grid>
 </UserControl>

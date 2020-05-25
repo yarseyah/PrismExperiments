@@ -1,7 +1,6 @@
 ﻿namespace PrismDialogsMdix.ViewModels
 {
     using System;
-    using System.Diagnostics;
     using System.Windows.Input;
 
     using Prism.Commands;
@@ -16,14 +15,7 @@
 
         private ICommand closeDialogCommand;
 
-        public DialogWindowViewModel()
-        {
-        }
-
-        private static void CloseDialog()
-        {
-            Trace.WriteLine("To do close");
-        }
+        private bool preventClose = false;
 
         public string Message
         {
@@ -37,7 +29,15 @@
             set => SetProperty(ref title, value);
         }
 
-        public ICommand CloseDialogCommand => closeDialogCommand ??= new DelegateCommand<string>(CloseDialog);
+        public bool PreventClose
+        {
+            get => preventClose;
+            set => SetProperty(ref preventClose, value);
+        }
+
+        public ICommand CloseDialogCommand =>
+            closeDialogCommand ??=
+                new DelegateCommand<string>(CloseDialog, s => CanCloseDialog()).ObservesProperty(() => PreventClose);
 
         public event Action<IDialogResult> RequestClose;
 
@@ -46,7 +46,7 @@
             Message = parameters.GetValue<string>("message");
         }
 
-        public bool CanCloseDialog() => true;
+        public bool CanCloseDialog() => !PreventClose;
 
         public void OnDialogClosed()
         {
@@ -54,19 +54,18 @@
 
         private void CloseDialog(string parameter)
         {
-            ButtonResult result = ButtonResult.None;
-            switch (parameter?.ToLower())
-            {
-                case "true":
-                    result = ButtonResult.OK;
-                    break;
-                default:
-                    result = ButtonResult.Cancel;
-                    break;
-            }
+            var result = parameter?.ToLower() switch
+                {
+                    "true" => ButtonResult.OK,
+                    "false" => ButtonResult.Cancel,
+                    _ => ButtonResult.Cancel
+                };
 
-            IDialogParameters parameters = new DialogParameters();
-            parameters.Add("data", parameter);
+            IDialogParameters parameters = new DialogParameters
+            {
+                { "data", result == ButtonResult.OK || result == ButtonResult.Yes ? parameter : string.Empty }
+            };
+
             RequestClose?.Invoke(new DialogResult(result, parameters));
         }
     }
