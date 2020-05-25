@@ -10,11 +10,19 @@
 
     public class DialogWindowViewModel : BindableBase, IDialogAware
     {
-        private string message;
+        private string message = "Hello world";
+
+        private string title = "Dialog box";
+
+        private ICommand closeDialogCommand;
 
         public DialogWindowViewModel()
         {
-            CloseDialogCommand = new DelegateCommand(() => Trace.WriteLine("To do close"));
+        }
+
+        private static void CloseDialog()
+        {
+            Trace.WriteLine("To do close");
         }
 
         public string Message
@@ -23,25 +31,41 @@
             set => SetProperty(ref message, value);
         }
 
-        public ICommand CloseDialogCommand { get; }
-
-        public bool CanCloseDialog()
+        public string Title
         {
-            throw new NotImplementedException();
+            get => title;
+            set => SetProperty(ref title, value);
         }
 
-        public void OnDialogClosed()
-        {
-            throw new NotImplementedException();
-        }
+        public ICommand CloseDialogCommand => closeDialogCommand ??= new DelegateCommand<string>(CloseDialog);
+
+        public event Action<IDialogResult> RequestClose;
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            throw new NotImplementedException();
+            Message = parameters.GetValue<string>("message");
         }
 
-        public string Title { get; }
+        public bool CanCloseDialog() => true;
 
-        public event Action<IDialogResult> RequestClose;
+        public void OnDialogClosed()
+        {
+        }
+
+        private void CloseDialog(string parameter)
+        {
+            ButtonResult result = ButtonResult.None;
+            switch (parameter?.ToLower())
+            {
+                case "true":
+                    result = ButtonResult.OK;
+                    break;
+                default:
+                    result = ButtonResult.Cancel;
+                    break;
+            }
+
+            RequestClose?.Invoke(new DialogResult(result));
+        }
     }
 }

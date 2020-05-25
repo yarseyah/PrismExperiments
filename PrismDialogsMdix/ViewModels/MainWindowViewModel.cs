@@ -5,6 +5,7 @@
 
     using Prism.Commands;
     using Prism.Mvvm;
+    using Prism.Services.Dialogs;
 
     using PrismDialogsMdix.Services;
 
@@ -14,12 +15,14 @@
 
         private int selectedFruitIndex;
 
-        public MainWindowViewModel(IFruitService fruitService)
+        public MainWindowViewModel(IFruitService fruitService, IDialogService dialogService)
         {
             FruitService = fruitService;
+            DialogService = dialogService;
+
             Fruits = FruitService.GetAll();
 
-            PressMeCommand = new DelegateCommand(() => Trace.WriteLine($"Button pressed - selectedFruitIndex = {SelectedFruitIndex}"));
+            PressMeCommand = new DelegateCommand(ShowDialog);
         }
 
         public ICommand PressMeCommand { get; }
@@ -37,5 +40,23 @@
         }
 
         private IFruitService FruitService { get; }
+
+        private IDialogService DialogService { get; }
+
+        private void ShowDialog()
+        {
+            var message = $"selectedFruitIndex = {SelectedFruitIndex}";
+            Trace.WriteLine($"Button pressed - selectedFruitIndex = {SelectedFruitIndex}");
+
+            IDialogParameters parameters = new DialogParameters();
+            parameters.Add("message", message);
+
+            DialogService.ShowDialog("DialogWindow", parameters, OnDialogResult);
+        }
+
+        private void OnDialogResult(IDialogResult dialogResult)
+        {
+            Trace.WriteLine($"Response from dialog was {dialogResult.Result}");
+        }
     }
 }

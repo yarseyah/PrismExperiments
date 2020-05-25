@@ -16,6 +16,7 @@
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IFruitService, FruitService>();
+            containerRegistry.RegisterDialog<DialogWindow>();
         }
 
         protected override Window CreateShell()
